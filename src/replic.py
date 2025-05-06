@@ -229,9 +229,7 @@ class ReplicSlave():
     
 
     def isRunning(self,):
-        if self.isIoRunning() and self.isSqlRunning():
-            return True
-        return False
+        return self.isIoRunning() and self.isSqlRunning()
 
 
     def getStatus(self, key):
@@ -239,14 +237,10 @@ class ReplicSlave():
 
 
     def isIoRunning(self,):
-        if self.getStatus('Slave_IO_Running') == 'Yes':
-            return True
-        return False
+        return self.getStatus('Slave_IO_Running') == 'Yes'
 
     def isSqlRunning(self,):
-        if self.getStatus('Slave_SQL_Running') == 'Yes':
-            return True
-        return False
+        return self.getStatus('Slave_SQL_Running') == 'Yes'
 
 
     def getBackupFlag(self,):
@@ -326,6 +320,7 @@ class ReplicServer():
         self.connect_timeout = self.DEFAULT_TIMEOUT
 
         self.parseMyCnf()
+        
         if host is not None:
             self.setHost(host)
         else:
