@@ -215,10 +215,7 @@ class ReplicSlave():
 
 
     def getPrettyName(self):
-        if self.name == '':
-            return 'main'
-        else:
-            return self.name
+        return 'main' if self.name == '' else self.name
 
     
     def getShortStatus(self,):
@@ -229,9 +226,7 @@ class ReplicSlave():
     
 
     def isRunning(self,):
-        if self.isIoRunning() and self.isSqlRunning():
-            return True
-        return False
+        return self.isIoRunning() and self.isSqlRunning()
 
 
     def getStatus(self, key):
@@ -239,14 +234,10 @@ class ReplicSlave():
 
 
     def isIoRunning(self,):
-        if self.getStatus('Slave_IO_Running') == 'Yes':
-            return True
-        return False
+        return self.getStatus('Slave_IO_Running') == 'Yes'
 
     def isSqlRunning(self,):
-        if self.getStatus('Slave_SQL_Running') == 'Yes':
-            return True
-        return False
+        return self.getStatus('Slave_SQL_Running') == 'Yes'
 
 
     def getBackupFlag(self,):
@@ -258,10 +249,8 @@ class ReplicSlave():
 
     def isBackupRunningForTooLong(self,):
         bflag = self.getBackupFlag()
-        if os.path.exists(bflag):
-            if time.time() - os.stat(bflag).st_mtime > 7200:
-                return True
-        return False
+        is_backup_flag_old_or_missing = os.path.exists(bflag) and time.time() - os.stat(bflag).st_mtime > 7200
+        return is_backup_flag_old_or_missing
 
 
     def isBackupRunning(self,):
@@ -1105,19 +1094,18 @@ def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hdH:u:p:", 
             [
-            "help",
-            "debug",
-            "confident",
-            "dry-run",
-            "host=",
-            "user=",
-            "passwd=",
-            "check",
-            "switch",
+                "help",
+                "debug",
+                "confident",
+                "dry-run",
+                "host=",
+                "user=",
+                "passwd=",
+                "check",
+                "switch",
             ]
         )
     except getopt.GetoptError:
-           # print help information and exit:
         Usage()
 
     for o, a in opts:
@@ -1162,11 +1150,7 @@ def main():
     sys.exit(exitcode)
 
 
-
-
 if __name__ == '__main__':
     binary = '/usr/bin/poetry'
     args = [binary, 'run', 'replic'] + sys.argv[1:]
     os.execvp(binary, args)
-
-
